@@ -65,13 +65,13 @@ def sudoku_model(initial_grid):
                 con.add_satisfying_tuples(sat_tuples)
                 cons.append(con)
 
-'''
+    '''
     #3 Square (all-diff)
     center_sq = [(1,1),(4,1),(7,1),(1,4),(4,4),(7,4),(1,7),(4,7),(7,7)]
 
     for i in range(0,9):
         for j in range(0,9):
-            print(i,j)
+            #print(i,j)
             if (i,j) in center_sq:
                 top_left      = variable_array[i-1][j-1]
                 top_center    = variable_array[i-1][j  ]
@@ -87,7 +87,7 @@ def sudoku_model(initial_grid):
                              left       , center       , right    ,
                              bottom_left, bottom_center, bottom_right] 
                 
-                con = Constraint('Column({},{})'.format(j,k), var_scope)
+                con = Constraint('Box({},{})'.format(j,k), var_scope)
                 sat_tuples = []
                 
                 cur_domain = []
@@ -100,10 +100,45 @@ def sudoku_model(initial_grid):
                         
                 con.add_satisfying_tuples(sat_tuples)
                 cons.append(con)
-'''
+    '''
+    #4 Square (binary)
+    center_sq = [(1,1),(4,1),(7,1),(1,4),(4,4),(7,4),(1,7),(4,7),(7,7)]
+    
+    #flatten box variables and store in box_var
+    box_var = []
+    for i in range(0,9):
+        for j in range(0,9):
+            print(i,j)
+            if (i,j) in center_sq:
+                top_left      = variable_array[i-1][j-1]
+                top_center    = variable_array[i-1][j  ]
+                top_right     = variable_array[i-1][j+1]
+                left          = variable_array[i  ][j-1]
+                center        = variable_array[i  ][j  ]
+                right         = variable_array[i  ][j+1]
+                bottom_left   = variable_array[i+1][j-1]
+                bottom_center = variable_array[i+1][j  ]
+                bottom_right  = variable_array[i+1][j+1]
+                box_var.append([top_left   , top_center   , top_right,
+                                left       , center       , right    ,
+                                bottom_left, bottom_center, bottom_right]) 
+    
+    for i in range(len(box_var)): #treat as a row constraint
+        for j in range(len(box_var)):
+            for k in range(j+1, len(box_var)):
+                var_scope = [box_var[i][j],box_var[i][k]]
+                con = Constraint('Box({},{})'.format(j,k), var_scope)
+                sat_tuples = []
+                cur_domain1 = box_var[i][j].cur_domain()
+                cur_domain2 = box_var[i][k].cur_domain()
+                
+                for t in itertools.product(cur_domain1, cur_domain2):
+                    if binary_not_equal(t[0], t[1]):
+                        sat_tuples.append(t)
+                con.add_satisfying_tuples(sat_tuples)
+                cons.append(con)
 
-        
-        
+            
     csp = CSP('Sudoku', [value for sublist in variable_array for value in sublist])
     for c in cons:
         csp.add_constraint(c)
