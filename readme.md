@@ -8,7 +8,12 @@ Additional problems can be input into sudoku_run.py.
 
 # #CSP:
 1. 
-
+# H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6
 
 
 
