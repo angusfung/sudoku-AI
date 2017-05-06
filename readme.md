@@ -14,5 +14,8 @@ Additional problems can be input into sudoku_run.py.
 
 Constraint 3a was commented out since it was too slow. 
 
+# TO DO:
+Implementation as an exact cover problem using Dancing Links.
+
 
 
