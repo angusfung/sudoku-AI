@@ -6,14 +6,13 @@ Sodoku solver by modelling it as a CSP (constraint-satification problem), and ad
 
 Additional problems can be input into sudoku_run.py. 
 
-# #CSP:
-1. 
-# H1
-## H2
-### H3
-#### H4
-##### H5
-###### H6
+# CSP:
+1. Constraint 1: Uniqueness in each row     [binary-not-equal constraints]
+2. Constraint 2: Uniqueness in each column  [binary-not-equal constraints]
+3. Constraint 3a: Uniqueness in each square [all-different constraints]
+4. Constraint 3b: Uniqueness in each square [binary-not-equal constraints]
+
+Constraint 3a was commented out since it was too slow. 
 
 
 
